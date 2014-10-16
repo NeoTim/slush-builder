@@ -35,3 +35,10 @@ Config.prototype.set = function(key, val){
 }
 
 module.exports = Config;
+
+// gulp
+//   .src( templatePath + 'generator.json')
+//     .pipe( g.jsonEditor( function (json){
+//       return values;
+//     }))
+//     .pipe( gulp.dest('./') )

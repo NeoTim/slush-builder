@@ -7,26 +7,38 @@
     var Q = require('q');
     var _ = require('underscore.string');
 
+    exports.proccessFile = proccessFile;
+    exports.ask = ask;
 
-    exports.proccessFile = function( file ){
-      if (file.basename.indexOf('__') == 0) {
-        file.basename = '.' + file.basename.slice(2);
+    function proccessFile(file, answers){
+
+      if (file.basename.indexOf('_') == 0) {
+        file.basename = file.basename.replace('_', answers.slugifiedControllerName);
       }
       return file;
     }
 
-    exports.ask = function( prompts ){
+    function ask( prompts, moduleName ){
 
       var promised = Q.defer();
 
       inquirer.prompt( prompts, function (answers) {
-        if (!answers.appName) {
+        if (!answers) {
           return promised.reject()
         }
+
         promised.resolve( answers );
 
       });
+
       return promised.promise;
     }
 
 })();
+
+
+
+
+
+
+

@@ -1,82 +1,72 @@
-var fs = require('fs-extra');
-module.exports = function(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g){
-  gulp.task('default', function (done) {
-      // var values = config.get()
-      var values = {};
-      var controller = require('./controller.js');
-      var templatePath = __dirname + '/templates/';
+(function(){
 
-      var prompts = require('./prompts.js');
-      console.log(templatePath)
-      //Ask
-      controller
-        .ask( prompts )
-        .then( GenerateTemplates )
-        .catch( done );
+  'use strict';
 
+    var fs = require('fs-extra');
+    module.exports = function(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g){
+      gulp.task('default', function (done) {
 
-      function GenerateTemplates( values ){
-          console.log(values)
-          var serverTemplatesDir;
-          if( values.auth ){
-            serverTemplatesDir = 'auth';
-          }
-          if( values.base ){
-            serverTemplatesDir = 'base';
+          var templatesPath = __dirname + '/templates/';
+          var controller = require('./controller');
+          var templates = {
+            client: templatesPath + 'client/**/*',
+            static: templatesPath + 'static/**/*',
+            server: templatesPath + 'server/**/*',
           }
 
-          gulp
-            .src(templatePath + 'servers/**/*')
-              .pipe( g.rename( function ( file ) {
-                  file = controller.proccessFile( file );
-               }))
-              .pipe( g.template( values ))
-              .pipe( g.conflict('./'))
-              .pipe( gulp.dest('./'));
 
-          gulp
-            .src(templatePath + 'static/**/*')
-              .pipe( g.rename(function (file) {
-                  file = controller.proccessFile( file );
-               }))
-              .pipe( g.template( values ))
-              .pipe( g.conflict('./'))
-              .pipe( gulp.dest('./'));
+          var prompts = [
+            {
+              name: 'appName',
+              message: 'What would you like to call your application?',
+              default: 'Beast'
+            }
+          ];
 
-          gulp
-            .src(templatePath + 'clients/'+values.script+'/client/**/*')
-              .pipe( g.rename(function ( file ) {
-                  file = controller.proccessFile( file );
-               }))
-              .pipe( g.template( values ))
-              .pipe( g.conflict('./'))
-              .pipe( gulp.dest('./client/app'))
-
-          gulp
-            .src(templatePath + 'clients/'+values.script+'/options/'+values.httpType+'/**/*')
-              .pipe( g.rename(function ( file ) {
-                  file = controller.proccessFile( file );
-               }))
-              .pipe( g.template( values ))
-              .pipe( g.conflict('./'))
-              .pipe( gulp.dest('./client/app'))
+          controller
+            .ask( prompts )
+            .then( GenerateTemplates )
+            .catch( done );
 
 
-          gulp
-            .src( templatePath + 'soa.json')
-              .pipe( g.jsonEditor( function (json){
-                return values;
-              }))
-              .pipe( gulp.dest('./') )
-              .pipe( g.install())
-              .on('end', function () {
-                  done();
-              });
-      }
+          function GenerateTemplates( answers ){
+              gulp
+                .src( templates.static )
+                  .pipe( g.rename(function (file) {
+                      file = controller.proccessFile( file );
+                   }))
+                  .pipe( g.template( answers ))
+                  .pipe( g.conflict('./'))
+                  .pipe( gulp.dest('./'));
 
+
+              gulp
+                .src( templates.server )
+                  .pipe( g.template( answers ))
+                  .pipe( g.conflict('./'))
+                  .pipe( gulp.dest('./'));
+
+
+              gulp
+                .src( templates.client )
+                  .pipe( g.rename(function ( file ) {
+                      file = controller.proccessFile( file );
+                   }))
+                  .pipe( g.template( answers ))
+                  .pipe( g.conflict('./' ))
+                  .pipe( gulp.dest('./' ))
+                  .pipe( g.install())
+                  .on('end', function () {
+                      done();
+                  });
+
+          }
 
 
 
-  });
-  return gulp;
-}
+
+      });
+      return gulp;
+    }
+
+})();

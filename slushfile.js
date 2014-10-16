@@ -5,10 +5,11 @@
  * Copyright (c) 2014, Arvind Ravulavaru
  * Licensed under the MIT license.
  */
+(function(){
 
-'use strict';
+  'use strict';
 
-var gulp = require('gulp'),
+  var gulp = require('gulp'),
     install = require('gulp-install'),
     conflict = require('gulp-conflict'),
     template = require('gulp-template'),
@@ -20,20 +21,8 @@ var gulp = require('gulp'),
     g    = require('gulp-load-plugins')({lazy:false}),
     config = require('./config.js');
 
-// load generators
-gulp = require('./generators/app/index.js')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/crudModule')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/module/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/route/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/controller/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/view/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/service/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/factory/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/directive/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/filter/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/config/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/generator-angular/test/')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/expressModel')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/expressController')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/expressRoute')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
-gulp = require('./generators/expressTest')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
+  // load generators
+  gulp = require('./generators/app/index.js')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
+  gulp = require('./generators/sub-generators/controller/index.js')(gulp, install, conflict, template, rename, _, inflection, inquirer, mkdirp, g, config);
+
+})();
