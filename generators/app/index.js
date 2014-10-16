@@ -14,7 +14,6 @@
             server: templatesPath + 'server/**/*',
           }
 
-
           var prompts = [
             {
               name: 'appName',
@@ -38,6 +37,8 @@
                   .pipe( g.template( answers ))
                   .pipe( g.conflict('./'))
                   .pipe( gulp.dest('./'));
+
+
 
 
               gulp
